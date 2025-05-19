@@ -2,9 +2,8 @@
 #include <SDL.h>
 #include <iostream>
 #include <glad/gl.h>
-
- //#pragma comment(lib, "opengl32.lib")  // Link OpenGL library
-
+#include <glm/glm.hpp>
+ 
 
 SDL_Window* gGraphicApplicationWindow = nullptr;
 SDL_GLContext gOpenGLContext = nullptr;
