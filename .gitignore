@@ -44,3 +44,21 @@ Makefile
 *.la
 *.a
 *.lib
+# Ignore entire build output
+/x64/
+
+# Common Visual Studio build artifacts
+*.ilk
+*.log
+*.tlog
+*.pdb
+*.idb
+*.obj
+*.sdf
+*.opensdf
+*.vcxproj.user
+*.ipch
+*.db
+*.iobj
+*.ipdb
+*.tlog/
