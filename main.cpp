@@ -3,6 +3,10 @@
 #include <iostream>
 #include <glad/gl.h>
 #include <glm/glm.hpp>
+
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#include <assimp/Importer.hpp>
  
 
 SDL_Window* gGraphicApplicationWindow = nullptr;
@@ -102,8 +106,10 @@ void MainLoop()
 
 int main()
 { 
-    InitializeProgram();
-   
+    if(!InitializeProgram())
+    {
+        return -1;
+    }
     MainLoop();
     return 0;
 }
