@@ -1,2 +1,6 @@
 C:\Users\Kostya\source\repos\OpenGL_Renderer\gl.c;C:\Users\Kostya\source\repos\OpenGL_Renderer\OpenGL_Renderer\x64\Debug\gl.obj
 C:\Users\Kostya\source\repos\OpenGL_Renderer\main.cpp;C:\Users\Kostya\source\repos\OpenGL_Renderer\OpenGL_Renderer\x64\Debug\main.obj
+C:\Users\Kostya\source\repos\OpenGL_Renderer\Mesh.cpp;C:\Users\Kostya\source\repos\OpenGL_Renderer\OpenGL_Renderer\x64\Debug\Mesh.obj
+C:\Users\Kostya\source\repos\OpenGL_Renderer\Model.cpp;C:\Users\Kostya\source\repos\OpenGL_Renderer\OpenGL_Renderer\x64\Debug\Model.obj
+C:\Users\Kostya\source\repos\OpenGL_Renderer\Renderer.cpp;C:\Users\Kostya\source\repos\OpenGL_Renderer\OpenGL_Renderer\x64\Debug\Renderer.obj
+C:\Users\Kostya\source\repos\OpenGL_Renderer\Shader.cpp;C:\Users\Kostya\source\repos\OpenGL_Renderer\OpenGL_Renderer\x64\Debug\Shader.obj
