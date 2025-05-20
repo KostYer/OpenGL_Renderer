@@ -1,5 +1,6 @@
 #include "Renderer.h"
 #include <iostream>
+#include "SceneObject.h"
 
 Renderer::Renderer(int width, int height)
     : screenWidth(width), screenHeight(height) {
@@ -55,6 +56,10 @@ bool Renderer::Init() {
 void Renderer::LoadScene() {
     shader = new Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
     model = new Model("models/Sphere1.fbx");
+     
+    SceneObject* obj1 = new SceneObject(model, shader);
+    obj1->SetPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
+    sceneObjects.push_back(obj1);
 
     projection = glm::perspective(glm::radians(45.0f), (float)screenWidth / screenHeight, 0.1f, 100.0f);
     view = glm::lookAt(glm::vec3(0.0f, 1.0f, 6.0f),  // Camera position

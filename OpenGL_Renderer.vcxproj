@@ -144,6 +144,7 @@ SDL2main.lib;opengl32.lib;assimp-vc143-mt.lib;%(AdditionalDependencies)</Additio
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="SceneObject.cpp" />
     <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -152,6 +153,7 @@ SDL2main.lib;opengl32.lib;assimp-vc143-mt.lib;%(AdditionalDependencies)</Additio
     <ClInclude Include="Model.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SceneObject.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>

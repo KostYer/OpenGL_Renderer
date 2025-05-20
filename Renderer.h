@@ -6,6 +6,7 @@
 #include "DirectionalLight.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "SceneObject.h"
 
 class Renderer {
 public:
@@ -27,7 +28,7 @@ private:
     Shader* shader = nullptr;
     Model* model = nullptr;
 
-  
+    std::vector<SceneObject*> sceneObjects;
 
     glm::mat4 projection;
     glm::mat4 view;
