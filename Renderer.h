@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include "Shader.h"
 #include "Model.h"
+#include "DirectionalLight.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -22,8 +23,11 @@ private:
     int screenWidth;
     int screenHeight;
 
+    DirectionalLight DirectionalLight;
     Shader* shader = nullptr;
     Model* model = nullptr;
+
+  
 
     glm::mat4 projection;
     glm::mat4 view;

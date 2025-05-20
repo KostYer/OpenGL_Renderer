@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <glm/glm.hpp>
 
 Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath) {
     std::ifstream vShaderFile(vertexPath);
@@ -43,6 +44,10 @@ void Shader::setMat4(const std::string& name, const float* value) const {
 
 void Shader::setVec3(const std::string& name, float x, float y, float z) const {
     glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z);
+}
+
+void Shader::setVec3(const std::string& name, const glm::vec3& vec) const {
+    glUniform3f(glGetUniformLocation(ID, name.c_str()), vec.x, vec.y, vec.z);
 }
 
 void Shader::setFloat(const std::string& name, float value) const {

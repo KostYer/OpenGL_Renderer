@@ -1,4 +1,5 @@
-﻿  Renderer.cpp
+﻿  DirectionalLight.cpp
+  Renderer.cpp
   main.cpp
   Generating Code...
   OpenGL_Renderer.vcxproj -> C:\Users\Kostya\source\repos\OpenGL_Renderer\x64\Debug\OpenGL_Renderer.exe

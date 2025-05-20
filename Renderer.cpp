@@ -57,7 +57,7 @@ void Renderer::LoadScene() {
     model = new Model("models/Sphere1.fbx");
 
     projection = glm::perspective(glm::radians(45.0f), (float)screenWidth / screenHeight, 0.1f, 100.0f);
-    view = glm::lookAt(glm::vec3(0.0f, 1.0f, 3.0f),  // Camera position
+    view = glm::lookAt(glm::vec3(0.0f, 1.0f, 6.0f),  // Camera position
         glm::vec3(0.0f, 0.0f, 0.0f),  // Look at origin
         glm::vec3(0.0f, 1.0f, 0.0f)); // Up vector
 }
@@ -78,8 +78,10 @@ void Renderer::RenderFrame() {
 
     glm::mat4 modelMat = glm::mat4(1.0f); // Identity matrix
     shader->setMat4("model", &modelMat[0][0]);
+    DirectionalLight.ApplyToShader(*shader);
 
     model->Draw(*shader);
+   
 
     SDL_GL_SwapWindow(window);
 }
