@@ -54,12 +54,22 @@ bool Renderer::Init() {
 }
 
 void Renderer::LoadScene() {
-    shader = new Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
-    model = new Model("models/Sphere1.fbx");
-     
-    SceneObject* obj1 = new SceneObject(model, shader);
-    obj1->SetPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
-    sceneObjects.push_back(obj1);
+     shader = new Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
+     model = new Model("models/Sphere1.fbx");
+    
+     glm::mat4 modelMatrix = glm::translate(glm::mat4(1), glm::vec3(-112.0f, 0.0f, 0.0f)); // your SceneObject::GetModelMatrix()
+     // etc.
+     shader->setMat4("model", &modelMatrix[0][0]);
+
+
+     SceneObject* obj1 = new SceneObject(model, shader);
+     obj1->SetPosition(glm::vec3(1.0f, 0.0f, 0.0f));
+      sceneObjects.push_back(obj1);
+
+
+   // SceneObject* obj2 = new SceneObject(model, shader);
+  //  obj2->SetPosition(glm::vec3(-2.2f, 0.3f, 0.4f));
+  //  sceneObjects.push_back(obj2);
 
     projection = glm::perspective(glm::radians(45.0f), (float)screenWidth / screenHeight, 0.1f, 100.0f);
     view = glm::lookAt(glm::vec3(0.0f, 1.0f, 6.0f),  // Camera position
@@ -77,16 +87,16 @@ void Renderer::RenderFrame() {
     glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    shader->use();
-    shader->setMat4("projection", &projection[0][0]);
-    shader->setMat4("view", &view[0][0]);
+    for (SceneObject* obj : sceneObjects) {
+        Shader* currentShader = obj->GetShader();
+        currentShader->use();
 
-    glm::mat4 modelMat = glm::mat4(1.0f); // Identity matrix
-    shader->setMat4("model", &modelMat[0][0]);
-    DirectionalLight.ApplyToShader(*shader);
+        currentShader->setMat4("projection", &projection[0][0]);
+        currentShader->setMat4("view", &view[0][0]);
 
-    model->Draw(*shader);
-   
+        DirectionalLight.ApplyToShader(*currentShader);
+        obj->Draw(*currentShader);
+    }
 
     SDL_GL_SwapWindow(window);
 }

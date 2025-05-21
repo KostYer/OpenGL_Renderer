@@ -28,8 +28,18 @@ glm::mat4 SceneObject::GetModelMatrix() const {
     return mat;
 }
 
+Shader* SceneObject::GetShader()const
+{
+    return shader;
+}
+
 void SceneObject::Draw() const {
     shader->use();
     shader->setMat4("model", &GetModelMatrix()[0][0]);
     model->Draw(*shader);
+}
+
+void SceneObject::Draw(Shader& shader) const {
+    shader.setMat4("model", &GetModelMatrix()[0][0]);
+    model->Draw(shader);
 }

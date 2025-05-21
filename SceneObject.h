@@ -15,6 +15,7 @@ public:
     void SetScale(const glm::vec3& scl);
 
     glm::mat4 GetModelMatrix() const;
+    Shader* GetShader()const;
     void Draw(Shader& shader) const;
 
 private:
