@@ -63,13 +63,13 @@ void Renderer::LoadScene() {
 
 
      SceneObject* obj1 = new SceneObject(model, shader);
-     obj1->SetPosition(glm::vec3(1.0f, 0.0f, 0.0f));
+     obj1->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
       sceneObjects.push_back(obj1);
 
 
-   // SceneObject* obj2 = new SceneObject(model, shader);
-  //  obj2->SetPosition(glm::vec3(-2.2f, 0.3f, 0.4f));
-  //  sceneObjects.push_back(obj2);
+    SceneObject* obj2 = new SceneObject(model, shader);
+    obj2->SetPosition(glm::vec3(1.0f, 0.3f, 0.4f));
+     sceneObjects.push_back(obj2);
 
     projection = glm::perspective(glm::radians(45.0f), (float)screenWidth / screenHeight, 0.1f, 100.0f);
     view = glm::lookAt(glm::vec3(0.0f, 1.0f, 6.0f),  // Camera position
