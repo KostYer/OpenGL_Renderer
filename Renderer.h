@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "SceneObject.h"
+#include "Skybox.h"    
 
 class Renderer {
 public:
@@ -27,6 +28,7 @@ private:
     DirectionalLight DirectionalLight;
     Shader* shader = nullptr;
     Model* model = nullptr;
+    Skybox* skybox = nullptr;
 
     std::vector<SceneObject*> sceneObjects;
 

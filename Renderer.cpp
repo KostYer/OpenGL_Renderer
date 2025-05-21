@@ -9,6 +9,7 @@ Renderer::Renderer(int width, int height)
 Renderer::~Renderer() {
     delete shader;
     delete model;
+    delete skybox;
 
     SDL_GL_DeleteContext(glContext);
     SDL_DestroyWindow(window);
@@ -50,6 +51,8 @@ bool Renderer::Init() {
     glViewport(0, 0, screenWidth, screenHeight);
     glEnable(GL_DEPTH_TEST);
 
+    skybox = new Skybox();
+
     return true;
 }
 
@@ -86,6 +89,8 @@ void Renderer::RenderFrame() {
 
     glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    skybox->Draw(view, projection);
 
     for (SceneObject* obj : sceneObjects) {
         Shader* currentShader = obj->GetShader();
