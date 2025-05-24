@@ -1,9 +1,15 @@
 #include "Renderer.h"
 #include <iostream>
 #include "SceneObject.h"
+#include "Camera.h"
 
-Renderer::Renderer(int width, int height)
-    : screenWidth(width), screenHeight(height) {
+Renderer::Renderer(int screenWidth, int screenHeight)
+    : screenWidth(screenWidth), screenHeight(screenHeight),
+    camera(glm::vec3(0.0f, 0.0f, 3.0f),     // position
+        glm::vec3(0.0f, 0.0f, 0.0f),     // target
+        glm::vec3(0.0f, 1.0f, 0.0f))     // up
+{
+    // Setup SDL, GLAD, OpenGL settings, etc.
 }
 
 Renderer::~Renderer() {
@@ -60,7 +66,7 @@ void Renderer::LoadScene() {
      shader = new Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
      model = new Model("models/Sphere1.fbx");
     
-     glm::mat4 modelMatrix = glm::translate(glm::mat4(1), glm::vec3(-112.0f, 0.0f, 0.0f)); // your SceneObject::GetModelMatrix()
+     glm::mat4 modelMatrix = glm::mat4(1);// glm::translate(glm::mat4(1), glm::vec3(-112.0f, 0.0f, 0.0f)); // your SceneObject::GetModelMatrix()
      // etc.
      shader->setMat4("model", &modelMatrix[0][0]);
 
@@ -73,6 +79,11 @@ void Renderer::LoadScene() {
     SceneObject* obj2 = new SceneObject(model, shader);
     obj2->SetPosition(glm::vec3(1.0f, 0.3f, 0.4f));
      sceneObjects.push_back(obj2);
+
+     SceneObject* obj3 = new SceneObject(model, shader);
+     obj3->SetPosition(glm::vec3(-0.3f, 0.9f, -6.0f));
+     obj3->SetTransparent(true);
+     sceneObjects.push_back(obj3);
 
     projection = glm::perspective(glm::radians(45.0f), (float)screenWidth / screenHeight, 0.1f, 100.0f);
     view = glm::lookAt(glm::vec3(0.0f, 1.0f, 6.0f),  // Camera position
@@ -90,18 +101,62 @@ void Renderer::RenderFrame() {
     glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // Draw skybox first
     skybox->Draw(view, projection);
 
+    // Separate opaque and transparent objects
+    std::vector<SceneObject*> opaqueObjects;
+    std::vector<SceneObject*> transparentObjects;
+
     for (SceneObject* obj : sceneObjects) {
+        if (obj->IsTransparent()) {
+            transparentObjects.push_back(obj);
+        }
+        else {
+            opaqueObjects.push_back(obj);
+        }
+    }
+
+    // Draw opaque objects
+    for (SceneObject* obj : opaqueObjects) {
         Shader* currentShader = obj->GetShader();
         currentShader->use();
 
         currentShader->setMat4("projection", &projection[0][0]);
         currentShader->setMat4("view", &view[0][0]);
-
         DirectionalLight.ApplyToShader(*currentShader);
+
         obj->Draw(*currentShader);
     }
+
+    // Enable blending and disable depth write
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDepthMask(GL_FALSE);
+
+    // Sort transparent objects back-to-front
+    std::sort(transparentObjects.begin(), transparentObjects.end(),
+        [&](SceneObject* a, SceneObject* b) {
+            float distA = glm::length(camera.GetPosition() - a->GetPosition());
+            float distB = glm::length(camera.GetPosition() - b->GetPosition());
+            return distA > distB; // Farther objects drawn first
+        });
+
+    // Draw transparent objects
+    for (SceneObject* obj : transparentObjects) {
+        Shader* currentShader = obj->GetShader();
+        currentShader->use();
+
+        currentShader->setMat4("projection", &projection[0][0]);
+        currentShader->setMat4("view", &view[0][0]);
+        DirectionalLight.ApplyToShader(*currentShader);
+
+        obj->Draw(*currentShader);
+    }
+
+    // Restore state
+    glDepthMask(GL_TRUE);
+    glDisable(GL_BLEND);
 
     SDL_GL_SwapWindow(window);
 }

@@ -7,7 +7,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "SceneObject.h"
-#include "Skybox.h"    
+#include "Skybox.h" 
+#include "Camera.h"
 
 class Renderer {
 public:
@@ -24,6 +25,7 @@ private:
     SDL_GLContext glContext;
     int screenWidth;
     int screenHeight;
+    Camera camera;
 
     DirectionalLight DirectionalLight;
     Shader* shader = nullptr;

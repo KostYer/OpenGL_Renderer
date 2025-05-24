@@ -90,7 +90,7 @@ void Skybox::loadCubemap() {
     glGenTextures(1, &cubemapTexture);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
 
-    stbi_set_flip_vertically_on_load(false);
+   
 
     for (unsigned int i = 0; i < faces.size(); i++) {
         int width, height, nrChannels;
@@ -142,7 +142,8 @@ void Skybox::Draw(const glm::mat4& view, const glm::mat4& projection) {
     
     // Remove translation from the view matrix
     glm::mat4 viewNoTranslation = glm::mat4(glm::mat3(view));
-    skyboxShader->setMat4("view", &viewNoTranslation[0][0]);
+    //skyboxShader->setMat4("view", &viewNoTranslation[0][0]);
+    skyboxShader->setMat4("view", &view[0][0]);
     skyboxShader->setMat4("projection", &projection[0][0]);
 
     // Bind the cubemap texture to texture unit 0
@@ -155,5 +156,5 @@ void Skybox::Draw(const glm::mat4& view, const glm::mat4& projection) {
     glBindVertexArray(0);
 
     // Restore default depth function
-    glDepthFunc(GL_LESS);
+     glDepthFunc(GL_LESS);
 }

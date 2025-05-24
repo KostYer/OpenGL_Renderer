@@ -18,6 +18,11 @@ void SceneObject::SetScale(const glm::vec3& scl) {
     scale = scl;
 }
 
+glm::vec3 SceneObject::GetPosition()
+{
+    return position;
+}
+
 glm::mat4 SceneObject::GetModelMatrix() const {
     glm::mat4 mat = glm::mat4(1.0f);
     mat = glm::translate(mat, position);
@@ -42,4 +47,13 @@ void SceneObject::Draw() const {
 void SceneObject::Draw(Shader& shader) const {
     shader.setMat4("model", &GetModelMatrix()[0][0]);
     model->Draw(shader);
+}
+
+bool SceneObject::IsTransparent()
+{
+    return isTransparent;
+}
+void SceneObject::SetTransparent(bool tr)
+{
+    isTransparent = tr;
 }

@@ -33,7 +33,7 @@ void main() {
     
     // Final color calculation
     vec3 result = (ambient + diffuse) * objectColor.rgb;
-     FragColor = vec4(result, 1.0);
+     FragColor = vec4(result, 0.3);
 //
 
 

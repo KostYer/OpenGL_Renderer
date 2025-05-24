@@ -10,6 +10,6 @@ void main() {
     // Remove translation from the view matrix
     mat4 rotView = mat4(mat3(view));
     vec4 pos = projection * rotView * vec4(aPos, 1.0);
-    gl_Position = pos.xyww;  
+    gl_Position = pos.xyww;  //forces the Z depth to always be 1.0
     TexCoords = aPos;
 }

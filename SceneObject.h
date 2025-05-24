@@ -14,13 +14,19 @@ public:
     void SetRotation(const glm::vec3& eulerAngles); // in degrees
     void SetScale(const glm::vec3& scl);
 
+    glm::vec3 GetPosition();
+
     glm::mat4 GetModelMatrix() const;
     Shader* GetShader()const;
     void Draw(Shader& shader) const;
 
+    bool IsTransparent();
+    void SetTransparent(bool tr);
+
 private:
     Model* model;
     Shader* shader;
+    bool isTransparent;
 
     glm::vec3 position;
     glm::vec3 rotation;
