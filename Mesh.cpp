@@ -7,6 +7,12 @@ Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>&
     setupMesh();
 }
 
+
+Mesh::Mesh() {
+    // Optionally initialize members if needed
+    VAO = VBO = EBO = 0;
+}
+
 void Mesh::setupMesh() {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);

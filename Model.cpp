@@ -8,15 +8,20 @@
 
 #include <iostream>
 
-
+ 
 
 Model::Model(const std::string& path) {
     LoadModel(path);
 }
 
+Model::Model() {
+    // Initialize rootNode to nullptr (already done in-class if using C++11+)
+    rootNode = nullptr;
+}
+
 void Model::Draw(const Shader& shader) const {
     for (const auto& mesh : meshes) {
-        mesh.Draw(shader);
+        mesh->Draw(shader);
     }
 }
 
@@ -53,7 +58,7 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene) {
     }
 }
 
-Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
+Mesh* Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
 
@@ -91,12 +96,10 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
             vertex.TexCoords = glm::vec2(0.0f, 0.0f);
         }
 
-        // Tangents and Bitangents can be added similarly if needed
-
         vertices.push_back(vertex);
     }
 
-    // Process indices (faces)
+    // Process indices
     for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
         aiFace face = mesh->mFaces[i];
         for (unsigned int j = 0; j < face.mNumIndices; j++) {
@@ -104,7 +107,6 @@ Mesh Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
         }
     }
 
-    // For now, we skip materials/textures, you can extend later
-
-    return Mesh(vertices, indices);
+    // Create the Mesh on the heap and return a pointer to it
+    return new Mesh(vertices, indices);
 }

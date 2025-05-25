@@ -9,6 +9,8 @@
 #include "SceneObject.h"
 #include "Skybox.h" 
 #include "Camera.h"
+#include "Node.h"
+#include "ModelLoader.h"
 
 class Renderer {
 public:
@@ -19,6 +21,7 @@ public:
     void LoadScene();
     void RenderFrame();
     bool ShouldClose() const;
+    ModelLoader modelLoader;
 
 private:
     SDL_Window* window = nullptr;
@@ -36,4 +39,6 @@ private:
 
     glm::mat4 projection;
     glm::mat4 view;
+
+    void RenderNode(Node* node, glm::mat4 parentTransform, Shader& shader);
 };

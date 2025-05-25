@@ -11,9 +11,9 @@
 
 SDL_Window* gGraphicApplicationWindow = nullptr;
 SDL_GLContext gOpenGLContext = nullptr;
-
-int gScreenHeight = 600;
-int gScreenWidht = 800;
+//1920x1080
+int gScreenHeight = 1920;
+int gScreenWidht = 1080;
 SDL_Window* window;
 bool isActive = true;
 

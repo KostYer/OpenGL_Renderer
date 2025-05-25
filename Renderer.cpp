@@ -5,7 +5,7 @@
 
 Renderer::Renderer(int screenWidth, int screenHeight)
     : screenWidth(screenWidth), screenHeight(screenHeight),
-    camera(glm::vec3(0.0f, 0.0f, 3.0f),     // position
+    camera(glm::vec3(0.0f, 0.0f, 13.0f),     // position
         glm::vec3(0.0f, 0.0f, 0.0f),     // target
         glm::vec3(0.0f, 1.0f, 0.0f))     // up
 {
@@ -64,29 +64,31 @@ bool Renderer::Init() {
 
 void Renderer::LoadScene() {
      shader = new Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
-     model = new Model("models/Sphere1.fbx");
-    
-     glm::mat4 modelMatrix = glm::mat4(1);// glm::translate(glm::mat4(1), glm::vec3(-112.0f, 0.0f, 0.0f)); // your SceneObject::GetModelMatrix()
+     //model = new Model("models/Sphere1.fbx");
+     //model = new Model("models/Floating_Island.fbx");
+      model = modelLoader.LoadFromFile("models/Floating_Island.fbx"); 
+      glm::mat4 modelMatrix = glm::mat4(1);// glm::translate(glm::mat4(1), glm::vec3(-112.0f, 0.0f, 0.0f)); // your SceneObject::GetModelMatrix()
+      modelMatrix = glm::rotate(modelMatrix, glm::radians(180.0f), glm::vec3(0, 0, 1)); // rotate 45 degrees around Y
      // etc.
      shader->setMat4("model", &modelMatrix[0][0]);
-
 
      SceneObject* obj1 = new SceneObject(model, shader);
      obj1->SetPosition(glm::vec3(0.0f, 0.0f, 0.0f));
       sceneObjects.push_back(obj1);
+      ///Floating Island
 
-
+   
     SceneObject* obj2 = new SceneObject(model, shader);
     obj2->SetPosition(glm::vec3(1.0f, 0.3f, 0.4f));
-     sceneObjects.push_back(obj2);
+ //    sceneObjects.push_back(obj2);
 
      SceneObject* obj3 = new SceneObject(model, shader);
      obj3->SetPosition(glm::vec3(-0.3f, 0.9f, -6.0f));
      obj3->SetTransparent(true);
-     sceneObjects.push_back(obj3);
+   // sceneObjects.push_back(obj3);
 
     projection = glm::perspective(glm::radians(45.0f), (float)screenWidth / screenHeight, 0.1f, 100.0f);
-    view = glm::lookAt(glm::vec3(0.0f, 1.0f, 6.0f),  // Camera position
+    view = glm::lookAt(camera.GetPosition(),  // Camera position
         glm::vec3(0.0f, 0.0f, 0.0f),  // Look at origin
         glm::vec3(0.0f, 1.0f, 0.0f)); // Up vector
 }
@@ -121,6 +123,8 @@ void Renderer::RenderFrame() {
     for (SceneObject* obj : opaqueObjects) {
         Shader* currentShader = obj->GetShader();
         currentShader->use();
+
+        obj->SetRotation(glm::vec3(90.0f, 190.0f, 90.0f));
 
         currentShader->setMat4("projection", &projection[0][0]);
         currentShader->setMat4("view", &view[0][0]);
@@ -163,4 +167,19 @@ void Renderer::RenderFrame() {
 
 bool Renderer::ShouldClose() const {
     return false; // Modify if adding input/exit logic
+}
+
+void Renderer::RenderNode(Node* node, glm::mat4 parentTransform, Shader& shader) {
+    glm::mat4 globalTransform = parentTransform * node->localTransform;
+
+    // Draw each mesh with global transform
+    for (Mesh* mesh : node->meshes) {
+        shader.setMat4("model", &globalTransform[0][0]);
+        mesh->Draw(shader);
+    }
+
+    // Recursively draw children
+    for (Node* child : node->children) {
+        RenderNode(child, globalTransform, shader);
+    }
 }
