@@ -67,7 +67,7 @@ void Renderer::LoadScene() {
      //model = new Model("models/Sphere1.fbx");
      //model = new Model("models/Floating_Island.fbx");
       model = modelLoader.LoadFromFile("models/Floating_Island.fbx"); 
-      glm::mat4 modelMatrix = glm::mat4(1);// glm::translate(glm::mat4(1), glm::vec3(-112.0f, 0.0f, 0.0f)); // your SceneObject::GetModelMatrix()
+      glm::mat4 modelMatrix = glm::mat4(1); 
       modelMatrix = glm::rotate(modelMatrix, glm::radians(180.0f), glm::vec3(0, 0, 1)); // rotate 45 degrees around Y
      // etc.
      shader->setMat4("model", &modelMatrix[0][0]);

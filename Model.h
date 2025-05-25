@@ -15,16 +15,13 @@ class Model
 public:
     Model(const std::string& path);
     Model();
-  //  bool LoadFromFile(const std::string& path);
-    //void Draw() const;
+
     void Draw(const Shader& shader) const; // Pass shader by const reference
     Node* rootNode;
     std::vector<Mesh*> meshes;
 private:
    
-   // void ProcessMesh(const aiMesh* mesh);
-    void LoadModel(const std::string& path);
-    void ProcessNode(aiNode* node, const aiScene* scene);
+ 
     Mesh* ProcessMesh(aiMesh* mesh, const aiScene* scene);
 };
 

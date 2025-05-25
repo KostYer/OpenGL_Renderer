@@ -10,8 +10,8 @@
 
  
 
-Model::Model(const std::string& path) {
-    LoadModel(path);
+Model::Model(const std::string& path)
+{
 }
 
 Model::Model() {
@@ -25,38 +25,6 @@ void Model::Draw(const Shader& shader) const {
     }
 }
 
-void Model::LoadModel(const std::string& path) {
-    Assimp::Importer importer;
-
-    // Flags for post-processing
-    const aiScene* scene = importer.ReadFile(path,
-        aiProcess_Triangulate |          // convert all polygons to triangles
-        aiProcess_FlipUVs |              // flip UV coordinates (optional)
-        aiProcess_CalcTangentSpace |    // calculate tangent space (optional)
-        aiProcess_GenNormals |           // generate normals if missing
-        aiProcess_JoinIdenticalVertices // join duplicate vertices
-    );
-
-    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-        std::cerr << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
-        return;
-    }
-
-    ProcessNode(scene->mRootNode, scene);
-}
-
-void Model::ProcessNode(aiNode* node, const aiScene* scene) {
-    // Process all the node's meshes (if any)
-    for (unsigned int i = 0; i < node->mNumMeshes; i++) {
-        aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-        meshes.push_back(ProcessMesh(mesh, scene));
-    }
-
-    // Then do the same for each of its children
-    for (unsigned int i = 0; i < node->mNumChildren; i++) {
-        ProcessNode(node->mChildren[i], scene);
-    }
-}
 
 Mesh* Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
     std::vector<Vertex> vertices;
