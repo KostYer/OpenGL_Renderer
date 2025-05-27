@@ -92,13 +92,19 @@ void Renderer::LoadScene() {
         glm::vec3(0.0f, 0.0f, 0.0f),  // Look at origin
         glm::vec3(0.0f, 1.0f, 0.0f)); // Up vector
 }
-
+ 
 void Renderer::RenderFrame() {
+
+ 
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT)
             exit(0);
     }
+
+    view = camera.GetViewMatrix();
+
+
 
     glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -163,6 +169,13 @@ void Renderer::RenderFrame() {
     glDisable(GL_BLEND);
 
     SDL_GL_SwapWindow(window);
+
+
+ /*   std::cout << "Camera Position: " << camera.GetPosition().x << ", "
+        << camera.GetPosition().y << ", "
+        << camera.GetPosition().z << std::endl;*/
+
+    // std::cout << "Camera Position: " << camera.GetPosition().x 
 }
 
 bool Renderer::ShouldClose() const {

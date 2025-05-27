@@ -138,6 +138,7 @@ SDL2main.lib;opengl32.lib;assimp-vc143-mt.lib;%(AdditionalDependencies)</Additio
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Application.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="gl.c" />
@@ -151,6 +152,7 @@ SDL2main.lib;opengl32.lib;assimp-vc143-mt.lib;%(AdditionalDependencies)</Additio
     <ClCompile Include="Skybox.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Application.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="Mesh.h" />

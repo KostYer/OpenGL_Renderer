@@ -22,13 +22,13 @@ public:
     void RenderFrame();
     bool ShouldClose() const;
     ModelLoader modelLoader;
-
+    Camera camera;
 private:
     SDL_Window* window = nullptr;
     SDL_GLContext glContext;
     int screenWidth;
     int screenHeight;
-    Camera camera;
+//    Camera camera;
 
     DirectionalLight DirectionalLight;
     Shader* shader = nullptr;
