@@ -59,6 +59,10 @@ bool Renderer::Init() {
 
     skybox = new Skybox();
 
+    // In Renderer::Init() or Application constructor:
+    SDL_SetRelativeMouseMode(SDL_TRUE);
+    SDL_SetWindowGrab(window, SDL_TRUE);
+
     return true;
 }
 
@@ -169,6 +173,8 @@ void Renderer::RenderFrame() {
     glDisable(GL_BLEND);
 
     SDL_GL_SwapWindow(window);
+
+      
 
 
  /*   std::cout << "Camera Position: " << camera.GetPosition().x << ", "

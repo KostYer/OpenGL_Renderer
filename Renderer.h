@@ -23,8 +23,9 @@ public:
     bool ShouldClose() const;
     ModelLoader modelLoader;
     Camera camera;
-private:
     SDL_Window* window = nullptr;
+private:
+   
     SDL_GLContext glContext;
     int screenWidth;
     int screenHeight;

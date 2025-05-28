@@ -4,6 +4,7 @@
 Application::Application()
 {
     lastFrameTime = std::chrono::high_resolution_clock::now();
+
 }
 
     void Application::Run() {
@@ -16,7 +17,6 @@ Application::Application()
         }
     }
 
- 
     
     std::chrono::high_resolution_clock::time_point lastFrameTime;
 
@@ -27,22 +27,6 @@ Application::Application()
         return elapsed.count();
     }
 
-    //void Application::PollInput(float deltaTime) {
-    //    // Here you check keyboard and mouse input,
-    //    // using your input library (GLFW, SDL, etc).
-
-    //    
-    //    if (IsKeyPressed('W')) camera.ProcessKeyboardMovement('W', deltaTime);
-    //    if (IsKeyPressed('S')) camera.ProcessKeyboardMovement('S', deltaTime);
-    //    if (IsKeyPressed('A')) camera.ProcessKeyboardMovement('A', deltaTime);
-    //    if (IsKeyPressed('D')) camera.ProcessKeyboardMovement('D', deltaTime);
-
-    //    // Get mouse movement delta (you need to implement this)
-    //    float mouseXOffset = GetMouseDeltaX();
-    //    float mouseYOffset = GetMouseDeltaY();
-
-    //    camera.ProcessMouseMovement(mouseXOffset, mouseYOffset);
-    //}
 
     void Application::Update(float deltaTime) {
         // Any per-frame updates (animations, physics, etc) here.
@@ -54,15 +38,6 @@ Application::Application()
                                                 (float)screenWidth / screenHeight,
                                                 0.1f, 100.0f);
 
-        // Set view and projection matrices in your shaders, draw models
-     //   shader->use();
-     //   shader->setMat4("view", &view[0][0]);
-     //   shader->setMat4("projection", &projection[0][0]);
-
-        //// Draw your scene here
-        //for (auto obj : sceneObjects) {
-        //    obj->Draw(shader);
-        //}
     }
 
     // Placeholder functions to replace with your input library:
@@ -93,7 +68,7 @@ Application::Application()
         return quit;
     }
 
-    void Application::PollInput(float deltaTime, Camera& camera) {
+    void Application::PollInput(float deltaTime, Camera& camera, SDL_Window* window) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -101,7 +76,10 @@ Application::Application()
             }
             else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
                 quit = true;
+                SDL_SetRelativeMouseMode(SDL_FALSE);
+                SDL_SetWindowGrab(window, SDL_FALSE);
             }
+ 
         }
 
         const Uint8* state = SDL_GetKeyboardState(NULL);
@@ -114,8 +92,8 @@ Application::Application()
         int mouseX, mouseY;
         SDL_GetRelativeMouseState(&mouseX, &mouseY);
 
-        float sensitivity = 0.1f;
-   //     camera.ProcessMouseMovement(mouseX * sensitivity, -mouseY * sensitivity);
+        float sensitivity = 0.7f;
+        camera.ProcessMouseMovement(mouseX * sensitivity, -mouseY * sensitivity);
     }
 
     int screenWidth = 800;

@@ -14,7 +14,7 @@ class Application {
 public:
     Application();
     void Run();
-    void PollInput(float deltaTime, Camera& camera);
+    void PollInput(float deltaTime, Camera& camera, SDL_Window* window);
     //Camera camera;
     bool ShouldCloseWindow();
 

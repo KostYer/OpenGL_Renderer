@@ -45,7 +45,8 @@ int main() {
         lastFrameTime = currentFrameTime;
 
         // Handle input
-        app.PollInput(deltaTime, renderer.camera);
+        app.PollInput(deltaTime, renderer.camera,  renderer.window);
+
         renderer.RenderFrame();
         // Update scene, render objects, etc.
       //  app.RenderFrame();
