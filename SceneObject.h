@@ -8,7 +8,7 @@ class SceneObject
 {
 public:
     SceneObject(Model* model, Shader* shader);
-    void Draw() const;
+   // void Draw() const;
 
     void SetPosition(const glm::vec3& pos);
     void SetRotation(const glm::vec3& eulerAngles); // in degrees
@@ -22,7 +22,8 @@ public:
 
     bool IsTransparent();
     void SetTransparent(bool tr);
-
+     void DrawNode(Shader& shader, const Node* node, const glm::mat4& parentTransform);
+     void DebugDrawSingleMesh(/*const Model* model,*/ Shader& shader, const glm::mat4& view, const glm::mat4& projection);
 private:
     Model* model;
     Shader* shader;
@@ -31,5 +32,8 @@ private:
     glm::vec3 position;
     glm::vec3 rotation;
     glm::vec3 scale;
+
+    void DrawNode(Node* node, Shader& shader, glm::mat4 parentTransform) const;
+    void printMat4(const glm::mat4& mat, const std::string msg);
 };
 

@@ -16,10 +16,12 @@ public:
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
     void setupMesh();
+    unsigned int VAO, VBO, EBO;
+  //  glm::mat4 modelMatrix = glm::mat4(1.0f);
 private:
    
 
-    unsigned int VAO, VBO, EBO;
+    
 
    
 };

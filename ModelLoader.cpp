@@ -78,32 +78,40 @@ Mesh* ModelLoader::ProcessMesh(aiMesh* aimesh, const aiScene* scene) {
 
 // -- Node --
 
-Node* ModelLoader::ProcessNode(aiNode* ainode, const aiScene* scene, Model* model) {
 
-    std::cout << "Processing node: " << ainode->mName.C_Str()
+Node* ModelLoader::ProcessNode(aiNode* ainode, const aiScene* scene, Model* model, const glm::mat4& parentTransform) {
+   /* std::cout << "Processing node: " << ainode->mName.C_Str()
         << ", meshes: " << ainode->mNumMeshes
-        << ", children: " << ainode->mNumChildren << std::endl;
+        << ", children: " << ainode->mNumChildren << std::endl;*/
 
-
-    std::cout << "ProcessNode "<< std::endl;
     Node* node = new Node();
-    node->localTransform = aiMatrix4x4ToGlm(ainode->mTransformation);
+
+    glm::mat4 localTransform = aiMatrix4x4ToGlm(ainode->mTransformation);
+    glm::mat4 globalTransform = parentTransform * localTransform;
+
+
+    node->localTransform = localTransform;  //   store only local
+
     std::cout << "Number of meshes: " << ainode->mNumMeshes << std::endl;
     for (unsigned int i = 0; i < ainode->mNumMeshes; i++) {
         aiMesh* aimesh = scene->mMeshes[ainode->mMeshes[i]];
         Mesh* mesh = ProcessMesh(aimesh, scene);
+
+       // mesh->modelMatrix = localTransform; //   use only the local node transform here
+
         node->meshes.push_back(mesh);
-        model->meshes.push_back(mesh); // if your Model::meshes is std::vector<Mesh>, push by value
-        // or model->meshes.push_back(mesh); if Model::meshes is vector<Mesh*>
+        model->meshes.push_back(mesh);
     }
 
     for (unsigned int i = 0; i < ainode->mNumChildren; i++) {
-        node->children.push_back(ProcessNode(ainode->mChildren[i], scene, model));
+        node->children.push_back(ProcessNode(ainode->mChildren[i], scene, model, globalTransform));
     }
     return node;
 }
 
 // -- ModelLoader --
+
+
 
 Model* ModelLoader::LoadFromFile(const std::string& path) {
     Assimp::Importer importer;
@@ -112,7 +120,8 @@ Model* ModelLoader::LoadFromFile(const std::string& path) {
         aiProcess_Triangulate |
         aiProcess_GenSmoothNormals |
         aiProcess_FlipUVs |
-        aiProcess_CalcTangentSpace);
+        aiProcess_CalcTangentSpace
+        | aiProcess_GlobalScale);
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
         std::cerr << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
@@ -120,13 +129,16 @@ Model* ModelLoader::LoadFromFile(const std::string& path) {
     }
 
     Model* model = new Model();
-    model->rootNode = ProcessNode(scene->mRootNode, scene, model);
-   // std::cout << "Number of indices in first mesh: " << model->meshes[0]->indices.size() << std::endl;
-    std::cout << "Model loaded with " << model->meshes.size() << " meshes." << std::endl;
+    model->rootNode = ProcessNode(scene->mRootNode, scene, model, glm::mat4(1.0f));
+    if (!model->rootNode) {
+        std::cerr << "Root node is null!" << std::endl;
+    }
 
+
+    std::cout << "Model loaded with " << model->meshes.size() << " meshes." << std::endl;
     if (!model->meshes.empty()) {
-        std::cout << "First mesh indices count: " << model->meshes[0]->indices.size() << std::endl;
-        std::cout << "First mesh vertices count: " << model->meshes[0]->vertices.size() << std::endl;
+       // std::cout << "First mesh indices count: " << model->meshes[0]->indices.size() << std::endl;
+       // std::cout << "First mesh vertices count: " << model->meshes[0]->vertices.size() << std::endl;
     }
     else {
         std::cout << "Model contains no meshes!" << std::endl;

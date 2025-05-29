@@ -68,8 +68,7 @@ bool Renderer::Init() {
 
 void Renderer::LoadScene() {
      shader = new Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
-     //model = new Model("models/Sphere1.fbx");
-     //model = new Model("models/Floating_Island.fbx");
+ 
       model = modelLoader.LoadFromFile("models/Floating_Island.fbx"); 
       glm::mat4 modelMatrix = glm::mat4(1); 
       modelMatrix = glm::rotate(modelMatrix, glm::radians(180.0f), glm::vec3(0, 0, 1)); // rotate 45 degrees around Y
@@ -82,13 +81,13 @@ void Renderer::LoadScene() {
       ///Floating Island
 
    
-    SceneObject* obj2 = new SceneObject(model, shader);
-    obj2->SetPosition(glm::vec3(1.0f, 0.3f, 0.4f));
+  //  SceneObject* obj2 = new SceneObject(model, shader);
+  //  obj2->SetPosition(glm::vec3(1.0f, 0.3f, 0.4f));
  //    sceneObjects.push_back(obj2);
 
-     SceneObject* obj3 = new SceneObject(model, shader);
-     obj3->SetPosition(glm::vec3(-0.3f, 0.9f, -6.0f));
-     obj3->SetTransparent(true);
+  //   SceneObject* obj3 = new SceneObject(model, shader);
+  //   obj3->SetPosition(glm::vec3(-0.3f, 0.9f, -6.0f));
+  //   obj3->SetTransparent(true);
    // sceneObjects.push_back(obj3);
 
     projection = glm::perspective(glm::radians(45.0f), (float)screenWidth / screenHeight, 0.1f, 100.0f);
@@ -98,7 +97,6 @@ void Renderer::LoadScene() {
 }
  
 void Renderer::RenderFrame() {
-
  
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -109,7 +107,7 @@ void Renderer::RenderFrame() {
     view = camera.GetViewMatrix();
 
 
-
+    glDisable(GL_CULL_FACE); //4debug
     glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -132,15 +130,16 @@ void Renderer::RenderFrame() {
     // Draw opaque objects
     for (SceneObject* obj : opaqueObjects) {
         Shader* currentShader = obj->GetShader();
-        currentShader->use();
+         currentShader->use(); ///plug in rend pipeline
 
-        obj->SetRotation(glm::vec3(90.0f, 190.0f, 90.0f));
+        // obj->SetRotation(glm::vec3(-90.0f, 0.0f, 0.0f));
 
         currentShader->setMat4("projection", &projection[0][0]);
         currentShader->setMat4("view", &view[0][0]);
-        DirectionalLight.ApplyToShader(*currentShader);
+         DirectionalLight.ApplyToShader(*currentShader);
 
         obj->Draw(*currentShader);
+       // obj->DebugDrawSingleMesh( *currentShader, view, projection);
     }
 
     // Enable blending and disable depth write
@@ -173,15 +172,7 @@ void Renderer::RenderFrame() {
     glDisable(GL_BLEND);
 
     SDL_GL_SwapWindow(window);
-
-      
-
-
- /*   std::cout << "Camera Position: " << camera.GetPosition().x << ", "
-        << camera.GetPosition().y << ", "
-        << camera.GetPosition().z << std::endl;*/
-
-    // std::cout << "Camera Position: " << camera.GetPosition().x 
+ 
 }
 
 bool Renderer::ShouldClose() const {

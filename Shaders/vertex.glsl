@@ -7,12 +7,18 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
-out vec3 FragPos;
-out vec3 Normal;
+out vec3 FragPos;   // World-space position
+out vec3 Normal;    // World-space normal
 
 void main()
 {
-    FragPos = vec3(model * vec4(aPos, 1.0));
-    Normal = mat3(transpose(inverse(model))) * aNormal; //ensures proper transformation of normals when the model matrix includes scaling.
-    gl_Position = projection * view * vec4(FragPos, 1.0);
+    // Transform vertex position to world space
+    vec4 worldPosition = model * vec4(aPos, 1.0);
+    FragPos = vec3(worldPosition);
+
+    // Transform normal to world space (handles scaling and rotation)
+    Normal = mat3(transpose(inverse(model))) * aNormal;
+
+    // Final clip-space position
+    gl_Position = projection * view * worldPosition;
 }

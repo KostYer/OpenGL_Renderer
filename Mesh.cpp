@@ -43,8 +43,9 @@ void Mesh::setupMesh() {
 
 void Mesh::Draw(const Shader& shader) const {
     // Bind appropriate textures here if implemented
-
+  //  shader.setMat4("model", &modelMatrix[0][0]);  // Pass model matrix to shader
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size()), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
+ 
