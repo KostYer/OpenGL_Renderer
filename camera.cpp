@@ -3,7 +3,7 @@
 
  
 Camera::Camera(glm::vec3 pos, glm::vec3 target, glm::vec3 upVec)
-    : position(pos), worldUp(upVec), yaw(-90.0f), pitch(0.0f), movementSpeed(2.5f), mouseSensitivity(0.1f)
+    : position(pos), worldUp(upVec), yaw(-90.0f), pitch(0.0f), movementSpeed(12.5f), mouseSensitivity(0.1f)
 {
     front = glm::normalize(target - position);
     updateCameraVectors();
