@@ -114,6 +114,8 @@ void Renderer::RenderFrame() {
     // Draw skybox first
     skybox->Draw(view, projection);
 
+  
+
     // Separate opaque and transparent objects
     std::vector<SceneObject*> opaqueObjects;
     std::vector<SceneObject*> transparentObjects;
@@ -126,11 +128,24 @@ void Renderer::RenderFrame() {
             opaqueObjects.push_back(obj);
         }
     }
+   
 
     // Draw opaque objects
     for (SceneObject* obj : opaqueObjects) {
         Shader* currentShader = obj->GetShader();
          currentShader->use(); ///plug in rend pipeline
+
+         ///reflections
+        // Bind cubemap texture for reflections
+         glActiveTexture(GL_TEXTURE0 + 5);
+         glBindTexture(GL_TEXTURE_CUBE_MAP, skybox->cubemapTexture);
+         
+         currentShader->setInt("u_skybox", 5);
+         currentShader->setVec3("u_viewPos", camera.position);
+
+
+
+         ///reflections end
 
         // obj->SetRotation(glm::vec3(-90.0f, 0.0f, 0.0f));
 

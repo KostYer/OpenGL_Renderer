@@ -13,12 +13,12 @@ public:
     void Draw(const glm::mat4& view, const glm::mat4& projection);
   //  void setupSkyboxMesh();
   //  void loadCubemap(const std::vector<std::string>& faces);
- 
+    GLuint cubemapTexture;
 private:
      void loadCubemap();
 
     GLuint skyboxVAO, skyboxVBO;
-    GLuint cubemapTexture;
+    
     Shader* skyboxShader;
 
     std::vector<std::string> faces = {

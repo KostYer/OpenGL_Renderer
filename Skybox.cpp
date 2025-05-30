@@ -54,7 +54,7 @@ Skybox::Skybox() {
     skyboxShader = new Shader("shaders/skyboxvert.glsl", "shaders/skyboxfrag.glsl");
     skyboxShader->setInt("u_skybox", 0);
 
-    stbi_set_flip_vertically_on_load(false);
+   // stbi_set_flip_vertically_on_load(false);
     // Generate VAO/VBO
     glGenVertexArrays(1, &skyboxVAO);
     glGenBuffers(1, &skyboxVBO);
@@ -74,15 +74,7 @@ Skybox::~Skybox() {
     glDeleteBuffers(1, &skyboxVBO);
 }
 
-//void Skybox::setupSkyboxMesh() {
-//    glGenVertexArrays(1, &skyboxVAO);
-//    glGenBuffers(1, &skyboxVBO);
-//    glBindVertexArray(skyboxVAO);
-//    glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
-//    glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
-//    glEnableVertexAttribArray(0);
-//    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
-//}
+ 
 
 void Skybox::loadCubemap() {
 

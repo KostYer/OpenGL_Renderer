@@ -16,12 +16,12 @@ public:
     // Future movement methods can be added here:
     // void MoveForward(float delta);
     // void Rotate(float yaw, float pitch);
-
+    glm::vec3 position;
 private:
     glm::vec3 target;
 
 
-    glm::vec3 position;
+   
     glm::vec3 front;   // Direction camera faces
     glm::vec3 up;
     glm::vec3 right;
