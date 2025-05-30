@@ -13,8 +13,8 @@ uniform float u_ambientStrength;
 
 uniform samplerCube u_skybox;
 uniform vec3 u_viewPos; // camera position
-float u_roughness = 0.9; //0 sharp, 1 soft
-///float reflectionFactor = 0.3; //0 sharp, 1 soft
+float u_roughness = 0.4; //0 sharp, 1 soft
+ 
 
 out vec4 FragColor;
 

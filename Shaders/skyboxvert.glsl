@@ -12,4 +12,6 @@ void main() {
     vec4 pos = projection * rotView * vec4(aPos, 1.0);
     gl_Position = pos.xyww;  //forces the Z depth to always be 1.0
     TexCoords = aPos;
+
+   //gl_Position = projection * view * vec4(position, 1.0);
 }

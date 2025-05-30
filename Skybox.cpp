@@ -81,7 +81,7 @@ void Skybox::loadCubemap() {
     stbi_set_flip_vertically_on_load(false);
     glGenTextures(1, &cubemapTexture);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-
+   // glEnable(GL_FRAMEBUFFER_SRGB); // for framebuffer gamma correction
    
 
     for (unsigned int i = 0; i < faces.size(); i++) {
@@ -124,6 +124,8 @@ void Skybox::loadCubemap() {
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+ 
 }
 
 void Skybox::Draw(const glm::mat4& view, const glm::mat4& projection) {
@@ -131,6 +133,8 @@ void Skybox::Draw(const glm::mat4& view, const glm::mat4& projection) {
     glDepthFunc(GL_LEQUAL);
 
     skyboxShader->use();
+  
+    skyboxShader->setInt("u_skybox", 0); // matches GL_TEXTURE0
     
     // Remove translation from the view matrix
     glm::mat4 viewNoTranslation = glm::mat4(glm::mat3(view));
