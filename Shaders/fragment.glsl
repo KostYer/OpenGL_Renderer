@@ -13,6 +13,8 @@ uniform float u_ambientStrength;
 
 uniform samplerCube u_skybox;
 uniform vec3 u_viewPos; // camera position
+float u_roughness = 0.9; //0 sharp, 1 soft
+///float reflectionFactor = 0.3; //0 sharp, 1 soft
 
 out vec4 FragColor;
 
@@ -22,6 +24,11 @@ void main() {
 
     // Compute reflection vector
     vec3 reflectDir = reflect(-viewDir, norm);
+         reflectDir = normalize(reflectDir + norm * u_roughness); 
+
+    // How strong the reflection is
+    float fresnel = pow(1.0 - max(dot(viewDir, norm), 0.0), 3.0);
+    float reflectionFactor = mix(0.05, 0.3, fresnel) * (1.0 - u_roughness);
 
     // Sample skybox in linear space (assuming the cubemap is in linear space)
     vec3 skyboxColor = texture(u_skybox, reflectDir).rgb;
@@ -36,7 +43,7 @@ void main() {
     vec3 litColor = (ambient + diffuse) * VertexColor.rgb;
 
     // Combine lit color and skybox in linear space
-    vec3 combined = mix(litColor, skyboxColor, 0.1); // Blend factor to taste
+    vec3 combined = mix(litColor, skyboxColor, reflectionFactor); // Blend factor to taste
 
     // Final gamma correction — only once!
     combined = pow(combined, vec3(1.0 / 2.2));
