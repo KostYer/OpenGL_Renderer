@@ -132,7 +132,12 @@ void Renderer::RenderFrame() {
 
 
     /// ===== SHADOW PASS =====
-    glm::mat4 lightProjection = glm::ortho(-40.0f, 40.0f, -40.0f, 40.0f, 1.0f, 100.0f);
+    float sizeHor = 40.0f;
+    float sizeVer = 40.0f;
+    float nearClip = 0.3f;
+    float farClip = 100.0f;
+    glm::mat4 lightProjection = glm::ortho(-sizeHor, sizeHor, -sizeVer, sizeVer, nearClip, farClip);
+   // glm::mat4 lightProjection = glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, 1.0f, 50.0f);
     glm::mat4 lightView = glm::lookAt(DirectionalLight.direction * -50.0f,
         glm::vec3(0.0f),
         glm::vec3(0.0f, 1.0f, 0.0f));
@@ -143,7 +148,8 @@ void Renderer::RenderFrame() {
 
     glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
     glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
-    glClear(GL_DEPTH_BUFFER_BIT);
+   // glClear(GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     for (SceneObject* obj : sceneObjects) {
         shadowShader->setMat4("model", &obj->GetModelMatrix()[0][0]);
@@ -151,7 +157,7 @@ void Renderer::RenderFrame() {
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
+    glViewport(0, 0, screenWidth, screenHeight); // <- Restore the full screen resolution
      
     /// ===== MAIN PASS =====
 
