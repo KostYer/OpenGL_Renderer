@@ -9,10 +9,12 @@ layout (location = 3) in vec4 aColor;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
+uniform mat4 lightSpaceMatrix;
 
 out vec3 FragPos;   // World-space position
 out vec3 Normal;    // World-space normal
 out vec4 VertexColor;
+out vec4 FragPosLightSpace;
 
 void main()
 {
@@ -22,6 +24,9 @@ void main()
 
     // Transform normal to world space (handles scaling and rotation)
     Normal = mat3(transpose(inverse(model))) * aNormal;
+    
+    //shadows
+    FragPosLightSpace = lightSpaceMatrix * worldPosition;
 
     // Final clip-space position
      gl_Position = projection * view * worldPosition;

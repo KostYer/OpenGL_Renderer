@@ -29,10 +29,18 @@ private:
     SDL_GLContext glContext;
     int screenWidth;
     int screenHeight;
+
+    int SHADOW_WIDTH = 2048 *2;
+    int SHADOW_HEIGHT = 2048 * 2;
+
+
+    GLuint shadowFBO;
+    GLuint shadowMap;
 //    Camera camera;
 
     DirectionalLight DirectionalLight;
     Shader* shader = nullptr;
+    Shader* shadowShader = nullptr;
     Model* model = nullptr;
     Skybox* skybox = nullptr;
 
@@ -42,4 +50,5 @@ private:
     glm::mat4 view;
 
     void RenderNode(Node* node, glm::mat4 parentTransform, Shader& shader);
+    void InitShadows();
 };

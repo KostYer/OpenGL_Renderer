@@ -62,12 +62,36 @@ bool Renderer::Init() {
     // In Renderer::Init() or Application constructor:
     SDL_SetRelativeMouseMode(SDL_TRUE);
     SDL_SetWindowGrab(window, SDL_TRUE);
-
+    InitShadows();
     return true;
+}
+
+void Renderer::InitShadows()
+{
+  
+    glGenFramebuffers(1, &shadowFBO);
+
+    glGenTextures(1, &shadowMap);
+    glBindTexture(GL_TEXTURE_2D, shadowMap);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
+        SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMap, 0);
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void Renderer::LoadScene() {
      shader = new Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
+     shadowShader = new Shader("shaders/shadowVert.glsl", "shaders/shadowfrah.glsl");
  
       model = modelLoader.LoadFromFile("models/Floating_Island.fbx"); 
       glm::mat4 modelMatrix = glm::mat4(1); 
@@ -107,7 +131,32 @@ void Renderer::RenderFrame() {
     view = camera.GetViewMatrix();
 
 
-    glDisable(GL_CULL_FACE); //4debug
+    /// ===== SHADOW PASS =====
+    glm::mat4 lightProjection = glm::ortho(-40.0f, 40.0f, -40.0f, 40.0f, 1.0f, 100.0f);
+    glm::mat4 lightView = glm::lookAt(DirectionalLight.direction * -50.0f,
+        glm::vec3(0.0f),
+        glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 lightSpaceMatrix = lightProjection * lightView;
+
+    shadowShader->use();
+    shadowShader->setMat4("lightSpaceMatrix", &lightSpaceMatrix[0][0]);
+
+    glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+    glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+    glClear(GL_DEPTH_BUFFER_BIT);
+
+    for (SceneObject* obj : sceneObjects) {
+        shadowShader->setMat4("model", &obj->GetModelMatrix()[0][0]);
+        obj->Draw(*shadowShader);
+    }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+     
+    /// ===== MAIN PASS =====
+
+
+   // glDisable(GL_CULL_FACE); //4debug
     glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -135,6 +184,14 @@ void Renderer::RenderFrame() {
         Shader* currentShader = obj->GetShader();
          currentShader->use(); ///plug in rend pipeline
 
+        
+ 
+
+         glActiveTexture(GL_TEXTURE1); // You can choose any unit
+         glBindTexture(GL_TEXTURE_2D, shadowMap);
+         currentShader->setInt("u_shadowMap", 1);
+         currentShader->setMat4("lightSpaceMatrix", &lightSpaceMatrix[0][0]);
+
          ///reflections
         // Bind cubemap texture for reflections
          glActiveTexture(GL_TEXTURE0 + 5);
@@ -142,16 +199,14 @@ void Renderer::RenderFrame() {
          
          currentShader->setInt("u_skybox", 5);
          currentShader->setVec3("u_viewPos", camera.position);
-
-
-
+ 
          ///reflections end
 
-        // obj->SetRotation(glm::vec3(-90.0f, 0.0f, 0.0f));
+         // obj->SetRotation(glm::vec3(-90.0f, 0.0f, 0.0f));
 
         currentShader->setMat4("projection", &projection[0][0]);
         currentShader->setMat4("view", &view[0][0]);
-         DirectionalLight.ApplyToShader(*currentShader);
+        DirectionalLight.ApplyToShader(*currentShader);
 
         obj->Draw(*currentShader);
        // obj->DebugDrawSingleMesh( *currentShader, view, projection);

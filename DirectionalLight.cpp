@@ -9,7 +9,7 @@ DirectionalLight::DirectionalLight(const glm::vec3& pos, const glm::vec3& dir, c
 
 void DirectionalLight::ApplyToShader(const Shader& shader) const {
     shader.use();
-    shader.setVec3("u_lightPos", position);
+   // shader.setVec3("u_lightPos", position);
     shader.setVec3("u_lightDir", direction);
     shader.setVec3("u_lightColor", color);
     shader.setFloat("u_lightIntensity", lightIntencity);
