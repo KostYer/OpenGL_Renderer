@@ -22,6 +22,6 @@ public:
 private:
    
  
-    Mesh* ProcessMesh(aiMesh* mesh, const aiScene* scene);
+    
 };
 
