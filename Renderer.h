@@ -30,8 +30,8 @@ private:
     int screenWidth;
     int screenHeight;
 
-    int SHADOW_WIDTH = 2048 ;
-    int SHADOW_HEIGHT = 2048  ;
+    int SHADOW_WIDTH = 2048 * 2;
+    int SHADOW_HEIGHT = 2048  *2;
 
 
     GLuint shadowFBO;
