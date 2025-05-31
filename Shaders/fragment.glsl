@@ -24,35 +24,34 @@ float u_roughness = 0.4; //0 sharp, 1 soft
 
 out vec4 FragColor;
 
-
 float ShadowCalculation(vec4 fragPosLightSpace)
 {
-    // Perform perspective divide
     vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
-
-    // Transform to [0,1] range
     projCoords = projCoords * 0.5 + 0.5;
 
-    // Get closest depth from shadow map
-    float closestDepth = texture(u_shadowMap, projCoords.xy).r;
-
-    // Get current depth
-    float currentDepth = projCoords.z;
-
-    // Shadow bias to prevent acne
-    vec3 norm = normalize(Normal);
-    float bias = max(0.01 * (1.0 - dot(norm, -u_lightDir)), 0.005);
-
-    // Check if in shadow
-    float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
-
-    // Clamp outside light frustum
+    // Early exit if outside light frustum
     if (projCoords.z > 1.0)
-        shadow = 0.0;
+        return 0.0;
 
+    float currentDepth = projCoords.z;
+    float bias = max(0.01 * (1.0 - dot(normalize(Normal), -u_lightDir)), 0.005);
+
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / textureSize(u_shadowMap, 0);
+
+    // PCF: 3x3 kernel
+    for(int x = -1; x <= 1; ++x)
+    {
+        for(int y = -1; y <= 1; ++y)
+        {
+            float closestDepth = texture(u_shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
+            shadow += currentDepth - bias > closestDepth ? 1.0 : 0.0;
+        }
+    }
+
+    shadow /= 9.0; // average
     return shadow;
 }
-
 
 void main() {
     vec3 norm = normalize(Normal);
